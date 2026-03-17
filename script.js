@@ -1,605 +1,393 @@
-// Mobile Navigation Toggle
-document.addEventListener('DOMContentLoaded', function() {
-    const hamburger = document.querySelector('.hamburger');
-    const navMenu = document.querySelector('.nav-menu');
-    const navLinks = document.querySelectorAll('.nav-link');
+/*
+ * VELMOVERSE — Script
+ * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ * 1. Custom cursor (desktop)
+ * 2. Navbar scroll behavior
+ * 3. Mobile menu
+ * 4. Portfolio tab filter
+ * 5. Gallery modal + lightbox
+ * 6. Scroll reveal (Intersection Observer)
+ * 7. Counter animation
+ * ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ */
 
-    hamburger.addEventListener('click', function() {
-        hamburger.classList.toggle('active');
-        navMenu.classList.toggle('active');
-    });
+/* ══════════════════════════════════
+   1. CUSTOM CURSOR
+   Ring lags behind dot for that premium
+   "magnetic" feel seen on award-winning sites
+══════════════════════════════════ */
+const ring = document.getElementById('curRing');
+const dot  = document.getElementById('curDot');
 
-    // Close mobile menu when clicking on a link
-    navLinks.forEach(link => {
-        link.addEventListener('click', function() {
-            hamburger.classList.remove('active');
-            navMenu.classList.remove('active');
-        });
-    });
+if (ring && dot) {
+  let mx = 0, my = 0, rx = 0, ry = 0;
 
-    // Navbar scroll effect
-    updateNavbarScroll();
-    window.addEventListener('scroll', updateNavbarScroll);
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX;
+    my = e.clientY;
+    // Dot follows instantly
+    dot.style.left = mx + 'px';
+    dot.style.top  = my + 'px';
+  });
 
-    // Initialize portfolio functionality
-    initializePortfolio();
+  // Ring follows with smooth lerp
+  (function lerp() {
+    rx += (mx - rx) * 0.1;
+    ry += (my - ry) * 0.1;
+    ring.style.left = rx + 'px';
+    ring.style.top  = ry + 'px';
+    requestAnimationFrame(lerp);
+  })();
+
+  // Hover state on interactive elements
+  document.querySelectorAll('a, button, .wcard, .srv-row, .clink, .gthumb, .tab').forEach(el => {
+    el.addEventListener('mouseenter', () => ring.classList.add('on-hover'));
+    el.addEventListener('mouseleave', () => ring.classList.remove('on-hover'));
+    el.addEventListener('mousedown',  () => ring.classList.add('on-press'));
+    el.addEventListener('mouseup',    () => ring.classList.remove('on-press'));
+  });
+}
+
+
+/* ══════════════════════════════════
+   2. NAVBAR SCROLL
+══════════════════════════════════ */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 60);
+}, { passive: true });
+
+
+/* ══════════════════════════════════
+   3. MOBILE MENU
+══════════════════════════════════ */
+const hbg     = document.getElementById('hbg');
+const mobMenu = document.getElementById('mobMenu');
+
+hbg?.addEventListener('click', () => {
+  const open = hbg.classList.toggle('open');
+  mobMenu.classList.toggle('open', open);
+  document.body.style.overflow = open ? 'hidden' : '';
 });
 
-// Update navbar appearance on scroll
-function updateNavbarScroll() {
-    const navbar = document.querySelector('.navbar');
-    if (window.scrollY > 50) {
-        navbar.classList.add('scrolled');
+document.querySelectorAll('.mob-a').forEach(a => {
+  a.addEventListener('click', () => {
+    hbg.classList.remove('open');
+    mobMenu.classList.remove('open');
+    document.body.style.overflow = '';
+  });
+});
+
+
+/* ══════════════════════════════════
+   4. PORTFOLIO TAB FILTER
+══════════════════════════════════ */
+const artGrid = document.getElementById('artGrid');
+const webGrid = document.getElementById('webGrid');
+
+document.querySelectorAll('.tab').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('tab--on'));
+    btn.classList.add('tab--on');
+
+    if (btn.dataset.tab === 'art') {
+      artGrid.classList.remove('hidden');
+      webGrid.classList.add('hidden');
     } else {
-        navbar.classList.remove('scrolled');
+      artGrid.classList.add('hidden');
+      webGrid.classList.remove('hidden');
     }
-}
+  });
+});
 
-// Portfolio Project Data with actual image filenames
-const projectImages = {
-    'luna-memecoin': [
-        'WhatsApp Image 2025-08-21 à 05.39.01_186f7215.jpg',
-        'WhatsApp Image 2025-08-21 à 05.39.01_30646f1e.jpg',
-        'WhatsApp Image 2025-08-21 à 05.39.01_be6a0d3f.jpg',
-        'WhatsApp Image 2025-08-21 à 05.39.02_28665183.jpg',
-        'WhatsApp Image 2025-08-21 à 05.39.02_771d2c6f.jpg',
-        'WhatsApp Image 2025-08-21 à 05.39.02_a13ed0af.jpg',
-        'WhatsApp Image 2025-08-21 à 05.39.03_10cc72c0.jpg',
-        'WhatsApp Image 2025-08-21 à 05.39.03_259a2199.jpg',
-        'WhatsApp Image 2025-08-21 à 05.39.03_9891c2ed.jpg'
-    ],
-    'hypnotic-chameleons': [
-        'WhatsApp Image 2025-08-21 à 05.40.57_00f14e32.jpg',
-        'WhatsApp Image 2025-08-21 à 05.40.57_01f55f9d.jpg',
-        'WhatsApp Image 2025-08-21 à 05.40.57_1eb3d67c.jpg',
-        'WhatsApp Image 2025-08-21 à 05.40.57_4a8cc946.jpg',
-        'WhatsApp Image 2025-08-21 à 05.40.57_6628fce5.jpg',
-        'WhatsApp Image 2025-08-21 à 05.40.57_8d5f6050.jpg',
-        'WhatsApp Image 2025-08-21 à 05.40.57_dcea6b1a.jpg'
-    ],
-    'trumpio-ladio': [
-        'WhatsApp Image 2025-08-21 à 06.36.55_7f23e124.jpg',
-        'WhatsApp Image 2025-08-21 à 06.36.55_8a675499.jpg',
-        'WhatsApp Image 2025-08-21 à 06.36.56_086a64f8.jpg',
-        'WhatsApp Image 2025-08-21 à 06.36.56_1e68daa4.jpg',
-        'WhatsApp Image 2025-08-21 à 06.36.56_3cb51517.jpg',
-        'WhatsApp Image 2025-08-21 à 06.36.56_ad5b9ca0.jpg',
-        'WhatsApp Image 2025-08-21 à 06.36.56_b0ab3da7.jpg',
-        'WhatsApp Image 2025-08-21 à 06.36.56_e8589a3a.jpg',
-        'WhatsApp Image 2025-08-21 à 06.36.56_ffadd926.jpg',
-        'WhatsApp Image 2025-08-21 à 06.36.57_7870f06f.jpg',
-        'WhatsApp Image 2025-08-21 à 06.36.57_7b4ab2d5.jpg'
-    ],
-    'sugarcane-memecoin': [
-        'WhatsApp Image 2025-08-21 à 07.06.37_bfb94736.jpg',
-        'WhatsApp Image 2025-08-21 à 07.06.38_391ed3fc.jpg',
-        'WhatsApp Image 2025-08-21 à 07.06.38_3ddd4851.jpg',
-        'WhatsApp Image 2025-08-21 à 07.06.38_3fac0ea7.jpg',
-        'WhatsApp Image 2025-08-21 à 07.06.38_ad94cffa.jpg',
-        'WhatsApp Image 2025-08-21 à 07.06.38_dc2993c6.jpg',
-        'WhatsApp Image 2025-08-21 à 07.06.39_02eb6100.jpg',
-        'WhatsApp Image 2025-08-21 à 07.06.39_05a7cab9.jpg',
-        'WhatsApp Image 2025-08-21 à 07.06.39_12ed34f7.jpg',
-        'WhatsApp Image 2025-08-21 à 07.06.39_8191f42c.jpg',
-        'WhatsApp Image 2025-08-21 à 07.06.39_c84fcab5.jpg',
-        'WhatsApp Image 2025-08-21 à 07.06.39_d5286205.jpg'
-    ],
-    'tilly-memecoin': [
-        'WhatsApp Image 2025-08-21 à 07.07.14_306a7626.jpg',
-        'WhatsApp Image 2025-08-21 à 07.07.14_3578df61.jpg',
-        'WhatsApp Image 2025-08-21 à 07.07.14_75ef8e87.jpg',
-        'WhatsApp Image 2025-08-21 à 07.07.14_b0ff54c5.jpg',
-        'WhatsApp Image 2025-08-21 à 07.07.14_fe387a03.jpg',
-        'WhatsApp Image 2025-08-21 à 07.07.15_08d7cdd5.jpg',
-        'WhatsApp Image 2025-08-21 à 07.07.15_16cec7e0.jpg',
-        'WhatsApp Image 2025-08-21 à 07.07.15_436c3aad.jpg',
-        'WhatsApp Image 2025-08-21 à 07.07.15_4e425b8b.jpg',
-        'WhatsApp Image 2025-08-21 à 07.07.15_8443f204.jpg',
-        'WhatsApp Image 2025-08-21 à 07.07.15_ad05ed95.jpg',
-        'WhatsApp Image 2025-08-21 à 07.07.15_bad23db4.jpg',
-        'WhatsApp Image 2025-08-21 à 07.07.15_c5169a1e.jpg',
-        'WhatsApp Image 2025-08-21 à 07.07.15_ff2f1b8c.jpg'
-    ],
-    'random-arts': [
-        'WhatsApp Image 2025-08-21 à 07.21.04_00538c71.jpg',
-        'WhatsApp Image 2025-08-21 à 07.21.04_2656a916.jpg',
-        'WhatsApp Image 2025-08-21 à 07.21.04_7ceab4f3.jpg',
-        'WhatsApp Image 2025-08-21 à 07.21.04_a088abaf.jpg',
-        'WhatsApp Image 2025-08-21 à 07.21.05_16c1d5e3.jpg',
-        'WhatsApp Image 2025-08-21 à 07.21.05_519a12d5.jpg',
-        'WhatsApp Image 2025-08-21 à 07.21.05_5a062a17.jpg',
-        'WhatsApp Image 2025-08-21 à 07.21.05_7ae53e75.jpg',
-        'WhatsApp Image 2025-08-21 à 07.21.05_9802340b.jpg',
-        'WhatsApp Image 2025-08-21 à 07.21.05_a3766aee.jpg',
-        'WhatsApp Image 2025-08-21 à 07.21.05_db33450a.jpg',
-        'WhatsApp Image 2025-08-21 à 07.21.05_fc4a72c8.jpg',
-        'WhatsApp Image 2025-08-21 à 07.21.06_16a0750e.jpg',
-        'WhatsApp Image 2025-08-21 à 07.21.06_1f0e6ef3.jpg',
-        'WhatsApp Image 2025-08-21 à 07.21.06_2e5be975.jpg',
-        'WhatsApp Image 2025-08-21 à 07.21.06_39f9bd7e.jpg',
-        'WhatsApp Image 2025-08-21 à 07.21.06_43da8732.jpg',
-        'WhatsApp Image 2025-08-21 à 07.21.06_bb13d884.jpg',
-        'WhatsApp Image 2025-08-21 à 07.21.06_ddfe436c.jpg',
-        'WhatsApp Image 2025-08-21 à 07.21.06_e838ec9c.jpg',
-        'WhatsApp Image 2025-08-21 à 07.21.07_0526e763.jpg',
-        'WhatsApp Image 2025-08-21 à 07.21.07_27689e24.jpg',
-        'WhatsApp Image 2025-08-21 à 07.21.07_27c70ab1.jpg',
-        'WhatsApp Image 2025-08-21 à 07.21.07_2eb1bfc2.jpg',
-        'WhatsApp Image 2025-08-21 à 07.21.07_6958e732.jpg',
-        'WhatsApp Image 2025-08-21 à 07.21.07_7c592885.jpg',
-        'WhatsApp Image 2025-08-21 à 07.21.07_f7105835.jpg',
-        'WhatsApp Image 2025-08-21 à 07.21.08_23bec1e5.jpg',
-        'WhatsApp Image 2025-08-21 à 07.21.08_bf96c6ce.jpg',
-        'WhatsApp Image 2025-08-21 à 07.21.08_e867f3f6.jpg'
+
+/* ══════════════════════════════════
+   5. GALLERY MODAL + LIGHTBOX
+   Image data keyed to project IDs.
+   Folder names use the actual filesystem
+   names (with spaces) from the img/ directory.
+══════════════════════════════════ */
+
+// Map project key → { title, folder (actual fs name), images[] }
+const PROJECTS = {
+  'luna-memecoin': {
+    title: 'Luna Memecoin',
+    folder: 'Luna Memecoin',
+    images: [
+      'WhatsApp Image 2025-08-21 à 05.39.01_186f7215.jpg',
+      'WhatsApp Image 2025-08-21 à 05.39.01_30646f1e.jpg',
+      'WhatsApp Image 2025-08-21 à 05.39.01_be6a0d3f.jpg',
+      'WhatsApp Image 2025-08-21 à 05.39.02_28665183.jpg',
+      'WhatsApp Image 2025-08-21 à 05.39.02_771d2c6f.jpg',
+      'WhatsApp Image 2025-08-21 à 05.39.02_a13ed0af.jpg',
+      'WhatsApp Image 2025-08-21 à 05.39.03_10cc72c0.jpg',
+      'WhatsApp Image 2025-08-21 à 05.39.03_259a2199.jpg',
+      'WhatsApp Image 2025-08-21 à 05.39.03_9891c2ed.jpg'
     ]
+  },
+  'hypnotic-chameleons': {
+    title: 'Hypnotic Chameleons',
+    folder: 'Hypnotic Chameleons',
+    images: [
+      'WhatsApp Image 2025-08-21 à 05.40.57_00f14e32.jpg',
+      'WhatsApp Image 2025-08-21 à 05.40.57_01f55f9d.jpg',
+      'WhatsApp Image 2025-08-21 à 05.40.57_1eb3d67c.jpg',
+      'WhatsApp Image 2025-08-21 à 05.40.57_4a8cc946.jpg',
+      'WhatsApp Image 2025-08-21 à 05.40.57_6628fce5.jpg',
+      'WhatsApp Image 2025-08-21 à 05.40.57_8d5f6050.jpg',
+      'WhatsApp Image 2025-08-21 à 05.40.57_dcea6b1a.jpg'
+    ]
+  },
+  'trumpio-ladio': {
+    title: 'Trumpio Ladio',
+    folder: 'Trumpio Ladio',
+    images: [
+      'WhatsApp Image 2025-08-21 à 06.36.55_7f23e124.jpg',
+      'WhatsApp Image 2025-08-21 à 06.36.55_8a675499.jpg',
+      'WhatsApp Image 2025-08-21 à 06.36.56_086a64f8.jpg',
+      'WhatsApp Image 2025-08-21 à 06.36.56_1e68daa4.jpg',
+      'WhatsApp Image 2025-08-21 à 06.36.56_3cb51517.jpg',
+      'WhatsApp Image 2025-08-21 à 06.36.56_ad5b9ca0.jpg',
+      'WhatsApp Image 2025-08-21 à 06.36.56_b0ab3da7.jpg',
+      'WhatsApp Image 2025-08-21 à 06.36.56_e8589a3a.jpg',
+      'WhatsApp Image 2025-08-21 à 06.36.56_ffadd926.jpg',
+      'WhatsApp Image 2025-08-21 à 06.36.57_7870f06f.jpg',
+      'WhatsApp Image 2025-08-21 à 06.36.57_7b4ab2d5.jpg'
+    ]
+  },
+  'sugarcane-memecoin': {
+    title: 'SugarCane Memecoin',
+    folder: 'SugarCane Memecoin',
+    images: [
+      'WhatsApp Image 2025-08-21 à 07.06.37_bfb94736.jpg',
+      'WhatsApp Image 2025-08-21 à 07.06.38_391ed3fc.jpg',
+      'WhatsApp Image 2025-08-21 à 07.06.38_3ddd4851.jpg',
+      'WhatsApp Image 2025-08-21 à 07.06.38_3fac0ea7.jpg',
+      'WhatsApp Image 2025-08-21 à 07.06.38_ad94cffa.jpg',
+      'WhatsApp Image 2025-08-21 à 07.06.38_dc2993c6.jpg',
+      'WhatsApp Image 2025-08-21 à 07.06.39_02eb6100.jpg',
+      'WhatsApp Image 2025-08-21 à 07.06.39_05a7cab9.jpg',
+      'WhatsApp Image 2025-08-21 à 07.06.39_12ed34f7.jpg',
+      'WhatsApp Image 2025-08-21 à 07.06.39_8191f42c.jpg',
+      'WhatsApp Image 2025-08-21 à 07.06.39_c84fcab5.jpg',
+      'WhatsApp Image 2025-08-21 à 07.06.39_d5286205.jpg'
+    ]
+  },
+  'tilly-memecoin': {
+    title: 'Tilly Memecoin',
+    folder: 'Tilly Memecoin',
+    images: [
+      'WhatsApp Image 2025-08-21 à 07.07.14_306a7626.jpg',
+      'WhatsApp Image 2025-08-21 à 07.07.14_3578df61.jpg',
+      'WhatsApp Image 2025-08-21 à 07.07.14_75ef8e87.jpg',
+      'WhatsApp Image 2025-08-21 à 07.07.14_b0ff54c5.jpg',
+      'WhatsApp Image 2025-08-21 à 07.07.14_fe387a03.jpg',
+      'WhatsApp Image 2025-08-21 à 07.07.15_08d7cdd5.jpg',
+      'WhatsApp Image 2025-08-21 à 07.07.15_16cec7e0.jpg',
+      'WhatsApp Image 2025-08-21 à 07.07.15_436c3aad.jpg',
+      'WhatsApp Image 2025-08-21 à 07.07.15_4e425b8b.jpg',
+      'WhatsApp Image 2025-08-21 à 07.07.15_8443f204.jpg',
+      'WhatsApp Image 2025-08-21 à 07.07.15_ad05ed95.jpg',
+      'WhatsApp Image 2025-08-21 à 07.07.15_bad23db4.jpg',
+      'WhatsApp Image 2025-08-21 à 07.07.15_c5169a1e.jpg',
+      'WhatsApp Image 2025-08-21 à 07.07.15_ff2f1b8c.jpg'
+    ]
+  },
+  'random-arts': {
+    title: 'Mixed NFT Arts',
+    folder: 'Random Nfts + Memecoins Arts',
+    images: [
+      'WhatsApp Image 2025-08-21 à 07.21.04_00538c71.jpg',
+      'WhatsApp Image 2025-08-21 à 07.21.04_2656a916.jpg',
+      'WhatsApp Image 2025-08-21 à 07.21.04_7ceab4f3.jpg',
+      'WhatsApp Image 2025-08-21 à 07.21.04_a088abaf.jpg',
+      'WhatsApp Image 2025-08-21 à 07.21.05_16c1d5e3.jpg',
+      'WhatsApp Image 2025-08-21 à 07.21.05_519a12d5.jpg',
+      'WhatsApp Image 2025-08-21 à 07.21.05_5a062a17.jpg',
+      'WhatsApp Image 2025-08-21 à 07.21.05_7ae53e75.jpg',
+      'WhatsApp Image 2025-08-21 à 07.21.05_9802340b.jpg',
+      'WhatsApp Image 2025-08-21 à 07.21.05_a3766aee.jpg',
+      'WhatsApp Image 2025-08-21 à 07.21.05_db33450a.jpg',
+      'WhatsApp Image 2025-08-21 à 07.21.05_fc4a72c8.jpg',
+      'WhatsApp Image 2025-08-21 à 07.21.06_16a0750e.jpg',
+      'WhatsApp Image 2025-08-21 à 07.21.06_1f0e6ef3.jpg',
+      'WhatsApp Image 2025-08-21 à 07.21.06_2e5be975.jpg',
+      'WhatsApp Image 2025-08-21 à 07.21.06_39f9bd7e.jpg',
+      'WhatsApp Image 2025-08-21 à 07.21.06_43da8732.jpg',
+      'WhatsApp Image 2025-08-21 à 07.21.06_bb13d884.jpg',
+      'WhatsApp Image 2025-08-21 à 07.21.06_ddfe436c.jpg',
+      'WhatsApp Image 2025-08-21 à 07.21.06_e838ec9c.jpg',
+      'WhatsApp Image 2025-08-21 à 07.21.07_0526e763.jpg',
+      'WhatsApp Image 2025-08-21 à 07.21.07_27689e24.jpg',
+      'WhatsApp Image 2025-08-21 à 07.21.07_27c70ab1.jpg',
+      'WhatsApp Image 2025-08-21 à 07.21.07_2eb1bfc2.jpg',
+      'WhatsApp Image 2025-08-21 à 07.21.07_6958e732.jpg',
+      'WhatsApp Image 2025-08-21 à 07.21.07_7c592885.jpg',
+      'WhatsApp Image 2025-08-21 à 07.21.07_f7105835.jpg',
+      'WhatsApp Image 2025-08-21 à 07.21.08_23bec1e5.jpg',
+      'WhatsApp Image 2025-08-21 à 07.21.08_bf96c6ce.jpg',
+      'WhatsApp Image 2025-08-21 à 07.21.08_e867f3f6.jpg'
+    ]
+  }
 };
 
-// Portfolio Project Data
-const projectData = {
-    'luna-memecoin': {
-        title: 'Luna Memecoin Collection',
-        items: []
-    },
-    'hypnotic-chameleons': {
-        title: 'Hypnotic Chameleons NFT Collection',
-        items: []
-    },
-    'trumpio-ladio': {
-        title: 'Trumpio Ladio Memecoin',
-        items: []
-    },
-    'sugarcane-memecoin': {
-        title: 'SugarCane Memecoin',
-        items: []
-    },
-    'tilly-memecoin': {
-        title: 'Tilly Memecoin',
-        items: []
-    },
-    'random-arts': {
-        title: 'Random NFTs + Memecoins Arts',
-        items: []
-    },
-    'mlmcoin': {
-        title: 'MLM Coin Website',
-        isWebsite: true,
-        url: 'https://www.mlmcoin.io/'
-    },
-    'infiniteupek': {
-        title: 'Infiniteupek Website',
-        isWebsite: true,
-        url: 'https://infiniteupek.com/'
-    }
-};
+// Gallery modal DOM refs
+const gmodal      = document.getElementById('gmodal');
+const gmodalBack  = document.getElementById('gmodalBack');
+const gmodalClose = document.getElementById('gmodalClose');
+const gmodalTitle = document.getElementById('gmodalTitle');
+const gmodalCount = document.getElementById('gmodalCount');
+const gmodalGrid  = document.getElementById('gmodalGrid');
 
-function initializePortfolio() {
-    const projectFolders = document.querySelectorAll('.project-folder');
-    const portfolioFolders = document.getElementById('portfolio-folders');
-    const projectGallery = document.getElementById('project-gallery');
-    const backBtn = document.getElementById('back-btn');
-    const projectTitle = document.getElementById('project-title');
-    const galleryGrid = document.getElementById('gallery-grid');
+// Lightbox DOM refs
+const lightbox = document.getElementById('lightbox');
+const lbClose  = document.getElementById('lbClose');
+const lbPrev   = document.getElementById('lbPrev');
+const lbNext   = document.getElementById('lbNext');
+const lbImg    = document.getElementById('lbImg');
 
-    // Add click handlers to project folders
-    projectFolders.forEach(folder => {
-        folder.addEventListener('click', function() {
-            const projectId = this.dataset.project;
-            const project = projectData[projectId];
-            
-            // If it's a website project with a visit button, don't trigger gallery view
-            if (project && project.isWebsite) {
-                return; // Let the visit button handle the navigation
-            }
-            
-            showProjectGallery(projectId);
-        });
+let lbImages = [];
+let lbIndex  = 0;
+
+// Open gallery modal when an art card is clicked
+document.querySelectorAll('.wcard-art').forEach(card => {
+  card.addEventListener('click', () => {
+    const key  = card.dataset.proj;
+    const proj = PROJECTS[key];
+    if (!proj) return;
+
+    // Build thumbnail grid
+    gmodalTitle.textContent = proj.title;
+    gmodalGrid.innerHTML = '';
+    lbImages = [];
+
+    proj.images.forEach((fname, idx) => {
+      const src     = `img/${proj.folder}/${fname}`;
+      lbImages.push(src);
+
+      const thumb   = document.createElement('div');
+      thumb.className = 'gthumb';
+
+      const img     = document.createElement('img');
+      img.src       = src;
+      img.alt       = `${proj.title} — image ${idx + 1}`;
+      img.loading   = 'lazy';
+      img.onerror   = () => { thumb.style.display = 'none'; };
+
+      thumb.appendChild(img);
+      thumb.addEventListener('click', () => openLightbox(idx));
+      gmodalGrid.appendChild(thumb);
     });
 
-    // Back button handler
-    backBtn.addEventListener('click', function() {
-        showPortfolioFolders();
-    });
+    gmodalCount.textContent = `${proj.images.length} images`;
+    gmodal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  });
+});
 
-    function showProjectGallery(projectId) {
-        const project = projectData[projectId];
-        if (!project) return;
+// Close modal
+function closeModal() {
+  gmodal.classList.remove('open');
+  lightbox.classList.remove('open');
+  document.body.style.overflow = '';
+}
+gmodalClose?.addEventListener('click', closeModal);
+gmodalBack?.addEventListener('click', closeModal);
 
-        // Hide folders, show gallery
-        portfolioFolders.style.display = 'none';
-        projectGallery.style.display = 'block';
+// Lightbox
+function openLightbox(idx) {
+  lbIndex = idx;
+  lbImg.src = lbImages[idx];
+  lightbox.classList.add('open');
+}
+lbClose?.addEventListener('click', () => lightbox.classList.remove('open'));
+lbPrev?.addEventListener('click',  () => { lbIndex = (lbIndex - 1 + lbImages.length) % lbImages.length; lbImg.src = lbImages[lbIndex]; });
+lbNext?.addEventListener('click',  () => { lbIndex = (lbIndex + 1) % lbImages.length; lbImg.src = lbImages[lbIndex]; });
 
-        // Update title
-        projectTitle.textContent = project.title;
+// Keyboard navigation
+document.addEventListener('keydown', e => {
+  if (lightbox.classList.contains('open')) {
+    if (e.key === 'ArrowLeft')  lbPrev?.click();
+    if (e.key === 'ArrowRight') lbNext?.click();
+    if (e.key === 'Escape')     lbClose?.click();
+  } else if (gmodal.classList.contains('open')) {
+    if (e.key === 'Escape') closeModal();
+  }
+});
 
-        // Generate gallery items - only show items that have actual images
-        galleryGrid.innerHTML = '';
-        const projectImageList = projectImages[projectId];
-        
-        if (projectImageList && projectImageList.length > 0) {
-            projectImageList.forEach((imageName, index) => {
-                const galleryItem = createImageGalleryItem(imageName, index, projectId);
-                galleryGrid.appendChild(galleryItem);
-            });
-        } else {
-            // Fallback: show placeholder message if no images
-            galleryGrid.innerHTML = '<p style="color: #94a3b8; text-align: center; grid-column: 1 / -1;">No images available for this project yet.</p>';
-        }
 
-        // Scroll to gallery
-        projectGallery.scrollIntoView({ behavior: 'smooth' });
+/* ══════════════════════════════════
+   6. SCROLL REVEAL
+   Intersection Observer adds .in class
+   when elements enter viewport
+══════════════════════════════════ */
+const revealObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('in');
+      revealObs.unobserve(e.target); // fire once
     }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
-    function showPortfolioFolders() {
-        portfolioFolders.style.display = 'grid';
-        projectGallery.style.display = 'none';
-        document.getElementById('portfolio').scrollIntoView({ behavior: 'smooth' });
+// Apply reveal to key content blocks
+[
+  '.section-label', '.about-h2', '.about-p', '.srv-h2', '.cta-h2',
+  '.wcard', '.anum', '.srv-row', '.clink', '.web-grid .wcard'
+].forEach(sel => {
+  document.querySelectorAll(sel).forEach((el, i) => {
+    el.classList.add('reveal');
+    // Stagger siblings
+    const delay = ['rv1','rv2','rv3','rv4','rv5','rv6'][i % 6];
+    if (delay) el.classList.add(delay);
+    revealObs.observe(el);
+  });
+});
+
+
+/* ══════════════════════════════════
+   7. COUNTER ANIMATION
+   Counts up from 0 to data-to value
+   when element enters viewport
+══════════════════════════════════ */
+function countUp(el, target, duration = 1400) {
+  let start = 0;
+  const step = target / (duration / 16);
+  const tick = setInterval(() => {
+    start += step;
+    if (start >= target) {
+      el.textContent = target;
+      clearInterval(tick);
+    } else {
+      el.textContent = Math.floor(start);
     }
-
-    function createImageGalleryItem(imageName, index, projectId) {
-        const div = document.createElement('div');
-        div.className = 'gallery-item';
-        div.style.animationDelay = `${index * 0.1}s`;
-        
-        // Handle folder names with spaces
-        let folderName = projectId;
-        if (projectId === 'luna-memecoin') folderName = 'Luna Memecoin';
-        if (projectId === 'hypnotic-chameleons') folderName = 'Hypnotic Chameleons';
-        if (projectId === 'trumpio-ladio') folderName = 'Trumpio Ladio';
-        if (projectId === 'sugarcane-memecoin') folderName = 'SugarCane Memecoin';
-        if (projectId === 'tilly-memecoin') folderName = 'Tilly Memecoin';
-        if (projectId === 'random-arts') folderName = 'Random Nfts + Memecoins Arts';
-        
-        const imagePath = `img/${folderName}/${imageName}`;
-        
-        div.innerHTML = `
-            <div class="gallery-image">
-                <img src="${imagePath}" alt="Project Image ${index + 1}" class="gallery-img" 
-                     onerror="this.parentElement.parentElement.style.display='none';">
-            </div>
-        `;
-
-        // Add click handler to view full image
-        const img = div.querySelector('.gallery-img');
-        img.addEventListener('click', function() {
-            openImageModal(this.src, `Project Image ${index + 1}`);
-        });
-
-        return div;
-    }
-
-    // Image modal functionality
-    function openImageModal(imageSrc, imageName) {
-        // Create modal if it doesn't exist
-        let modal = document.getElementById('image-modal');
-        if (!modal) {
-            modal = document.createElement('div');
-            modal.id = 'image-modal';
-            modal.className = 'image-modal';
-            modal.innerHTML = `
-                <div class="modal-content">
-                    <span class="modal-close">&times;</span>
-                    <img class="modal-image" alt="">
-                    <div class="modal-caption"></div>
-                </div>
-            `;
-            document.body.appendChild(modal);
-
-            // Close modal handlers
-            const closeBtn = modal.querySelector('.modal-close');
-            closeBtn.addEventListener('click', () => modal.style.display = 'none');
-            modal.addEventListener('click', (e) => {
-                if (e.target === modal) modal.style.display = 'none';
-            });
-        }
-
-        // Show modal with image
-        const modalImg = modal.querySelector('.modal-image');
-        const modalCaption = modal.querySelector('.modal-caption');
-        modalImg.src = imageSrc;
-        modalCaption.textContent = imageName;
-        modal.style.display = 'block';
-    }
+  }, 16);
 }
 
-// Smooth scrolling for navigation links
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function (e) {
-        const href = this.getAttribute('href');
-        if (href === '#') return;
-        
-        e.preventDefault();
-        const target = document.querySelector(href);
-        if (target) {
-            target.scrollIntoView({
-                behavior: 'smooth',
-                block: 'start'
-            });
-        }
-    });
-});
-
-// Intersection Observer for animations
-const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-};
-
-const observer = new IntersectionObserver(function(entries) {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            entry.target.classList.add('animate-in');
-        }
-    });
-}, observerOptions);
-
-// Observe all sections for animation
-document.addEventListener('DOMContentLoaded', function() {
-    const sections = document.querySelectorAll('section');
-    const cards = document.querySelectorAll('.nft-card, .memecoin-card');
-    
-    sections.forEach(section => {
-        observer.observe(section);
-    });
-    
-    cards.forEach(card => {
-        observer.observe(card);
-    });
-});
-
-// Add CSS animation classes
-const style = document.createElement('style');
-style.textContent = `
-    .animate-in {
-        animation: slideInUp 0.8s ease-out forwards;
+const counterObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const target = parseInt(e.target.dataset.to, 10);
+      countUp(e.target, target);
+      counterObs.unobserve(e.target);
     }
-    
-    @keyframes slideInUp {
-        from {
-            opacity: 0;
-            transform: translateY(50px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    
-    .nft-card, .memecoin-card {
-        opacity: 0;
-        transform: translateY(50px);
-        transition: all 0.8s ease-out;
-    }
-    
-    .nft-card.animate-in, .memecoin-card.animate-in {
-        opacity: 1;
-        transform: translateY(0);
-    }
-`;
-document.head.appendChild(style);
-
-// Parallax effect for floating elements
-window.addEventListener('scroll', function() {
-    const scrolled = window.pageYOffset;
-    const parallax = document.querySelectorAll('.floating-card');
-    
-    parallax.forEach((element, index) => {
-        const speed = 0.5 + (index * 0.1);
-        element.style.transform = `translateY(${scrolled * speed}px)`;
-    });
-});
-
-// Contact form handling
-document.querySelector('.contact-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    // Get form data
-    const formData = new FormData(this);
-    const name = this.querySelector('input[type="text"]').value;
-    const email = this.querySelector('input[type="email"]').value;
-    const message = this.querySelector('textarea').value;
-    
-    // Simple validation
-    if (!name || !email || !message) {
-        showNotification('Please fill in all fields.', 'error');
-        return;
-    }
-    
-    // Simulate form submission
-    showNotification('Message sent successfully! I\'ll get back to you soon.', 'success');
-    this.reset();
-});
-
-// Notification system
-function showNotification(message, type) {
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    notification.textContent = message;
-    
-    // Add notification styles
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: ${type === 'success' ? 'linear-gradient(135deg, #10b981, #059669)' : 'linear-gradient(135deg, #ef4444, #dc2626)'};
-        color: white;
-        padding: 1rem 1.5rem;
-        border-radius: 8px;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        z-index: 10000;
-        animation: slideInRight 0.3s ease-out;
-    `;
-    
-    document.body.appendChild(notification);
-    
-    // Remove notification after 3 seconds
-    setTimeout(() => {
-        notification.style.animation = 'slideOutRight 0.3s ease-out';
-        setTimeout(() => {
-            document.body.removeChild(notification);
-        }, 300);
-    }, 3000);
-}
-
-// Add notification animations
-const notificationStyle = document.createElement('style');
-notificationStyle.textContent = `
-    @keyframes slideInRight {
-        from {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-        to {
-            transform: translateX(0);
-            opacity: 1;
-        }
-    }
-    
-    @keyframes slideOutRight {
-        from {
-            transform: translateX(0);
-            opacity: 1;
-        }
-        to {
-            transform: translateX(100%);
-            opacity: 0;
-        }
-    }
-`;
-document.head.appendChild(notificationStyle);
-
-// Counter animation for stats
-function animateCounters() {
-    const counters = document.querySelectorAll('.stat-item h3');
-    
-    counters.forEach(counter => {
-        const target = parseInt(counter.textContent.replace(/\D/g, ''));
-        const increment = target / 100;
-        let current = 0;
-        
-        const timer = setInterval(() => {
-            current += increment;
-            if (current >= target) {
-                counter.textContent = counter.textContent.replace(/\d+/, target);
-                clearInterval(timer);
-            } else {
-                counter.textContent = counter.textContent.replace(/\d+/, Math.floor(current));
-            }
-        }, 20);
-    });
-}
-
-// Trigger counter animation when about section is visible
-const aboutSection = document.querySelector('.about');
-const counterObserver = new IntersectionObserver(function(entries) {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            animateCounters();
-            counterObserver.unobserve(entry.target);
-        }
-    });
+  });
 }, { threshold: 0.5 });
 
-counterObserver.observe(aboutSection);
+document.querySelectorAll('[data-to]').forEach(el => counterObs.observe(el));
 
-// Add hover effects for NFT cards
-document.querySelectorAll('.nft-card').forEach(card => {
-    card.addEventListener('mouseenter', function() {
-        this.style.transform = 'translateY(-10px) scale(1.02)';
-    });
-    
-    card.addEventListener('mouseleave', function() {
-        this.style.transform = 'translateY(0) scale(1)';
-    });
-});
 
-// Add click effects for buttons
-document.querySelectorAll('.btn').forEach(btn => {
-    btn.addEventListener('click', function(e) {
-        const ripple = document.createElement('span');
-        const rect = this.getBoundingClientRect();
-        const size = Math.max(rect.width, rect.height);
-        const x = e.clientX - rect.left - size / 2;
-        const y = e.clientY - rect.top - size / 2;
-        
-        ripple.style.cssText = `
-            position: absolute;
-            width: ${size}px;
-            height: ${size}px;
-            left: ${x}px;
-            top: ${y}px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            transform: scale(0);
-            animation: ripple 0.6s linear;
-            pointer-events: none;
-        `;
-        
-        this.style.position = 'relative';
-        this.style.overflow = 'hidden';
-        this.appendChild(ripple);
-        
-        setTimeout(() => {
-            ripple.remove();
-        }, 600);
-    });
-});
-
-// Add ripple animation
-const rippleStyle = document.createElement('style');
-rippleStyle.textContent = `
-    @keyframes ripple {
-        to {
-            transform: scale(4);
-            opacity: 0;
-        }
+/* ══════════════════════════════════
+   8. SMOOTH ANCHOR SCROLL
+══════════════════════════════════ */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const id = a.getAttribute('href');
+    if (id === '#') return;
+    const target = document.querySelector(id);
+    if (target) {
+      e.preventDefault();
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
-`;
-document.head.appendChild(rippleStyle);
-
-// Typing effect for hero title
-function typeWriter(element, text, speed = 100) {
-    let i = 0;
-    element.innerHTML = '';
-    
-    function type() {
-        if (i < text.length) {
-            element.innerHTML += text.charAt(i);
-            i++;
-            setTimeout(type, speed);
-        }
-    }
-    
-    type();
-}
-
-// Initialize typing effect when page loads
-window.addEventListener('load', function() {
-    const heroTitle = document.querySelector('.hero-title .gradient-text');
-    if (heroTitle) {
-        const originalText = heroTitle.textContent;
-        typeWriter(heroTitle, originalText, 150);
-    }
+  });
 });
-
-// Add glitch effect to logo on hover
-document.querySelector('.logo-text').addEventListener('mouseenter', function() {
-    this.style.animation = 'glitch 0.5s ease-in-out';
-});
-
-document.querySelector('.logo-text').addEventListener('animationend', function() {
-    this.style.animation = '';
-});
-
-// Add glitch animation
-const glitchStyle = document.createElement('style');
-glitchStyle.textContent = `
-    @keyframes glitch {
-        0% { transform: translate(0); }
-        20% { transform: translate(-2px, 2px); }
-        40% { transform: translate(-2px, -2px); }
-        60% { transform: translate(2px, 2px); }
-        80% { transform: translate(2px, -2px); }
-        100% { transform: translate(0); }
-    }
-`;
-document.head.appendChild(glitchStyle);

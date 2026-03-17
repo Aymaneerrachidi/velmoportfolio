@@ -1,418 +1,591 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Velmoverse | Art & Dev Studio</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/jpg" href="img/logo-banner/logo.jpg">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Montserrat:wght@400;600;700;800&family=Poppins:wght@400;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Velmoverse — Web3 Art & Dev Studio</title>
+  <link rel="icon" type="image/jpg" href="img/logo-banner/logo.jpg">
+
+  <!-- Fonts: Bebas Neue (display) + Syne (UI) + DM Sans (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Syne:wght@400;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <div class="nav-logo">
-                <img src="img/logo-banner/logo.jpg" alt="Velmoverse Logo" class="logo-image">
-            </div>
-            <ul class="nav-menu">
-                <li class="nav-item">
-                    <a href="#home" class="nav-link">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#about" class="nav-link">About</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#portfolio" class="nav-link">Portfolio</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#services" class="nav-link">Services</a>
-                </li>
-                <li class="nav-item">
-                    <a href="#contact" class="nav-link">Contact</a>
-                </li>
-            </ul>
-            <div class="hamburger">
-                <span class="bar"></span>
-                <span class="bar"></span>
-                <span class="bar"></span>
-            </div>
-        </div>
-    </nav>
 
-    <!-- Hero Section -->
-    <section id="home" class="hero" style="background: linear-gradient(rgba(15, 20, 25, 0.7), rgba(15, 20, 25, 0.7)), url('img/logo-banner/Banner.jpg') center/cover;">
-        <div class="hero-content">
-            <div class="hero-text">
-                <h1 class="hero-title">
-                    <span class="gradient-text">Velmoverse</span>
-                </h1>
-                <p class="hero-subtitle">Art & Development for Web3, NFTs, Memecoins, and Blockchain Projects</p>
-                <div class="hero-buttons">
-                    <a href="#portfolio" class="btn btn-primary">View Portfolio</a>
-                    <a href="#contact" class="btn btn-secondary">Hire Me</a>
-                </div>
-            </div>
-            <div class="hero-visual">
-                <div class="floating-elements">
-                    <div class="floating-card card-1">
-                        <i class="fab fa-ethereum"></i>
-                    </div>
-                    <div class="floating-card card-2">
-                        <i class="fab fa-bitcoin"></i>
-                    </div>
-                    <div class="floating-card card-3">
-                        <i class="fas fa-palette"></i>
-                    </div>
-                </div>
-            </div>
+  <!-- Film grain noise overlay for premium tactile depth -->
+  <div class="noise" aria-hidden="true"></div>
+
+  <!-- Custom cursor (desktop only) -->
+  <div class="cur-ring" id="curRing"></div>
+  <div class="cur-dot"  id="curDot"></div>
+
+  <!-- ══════════════════════════════════
+       NAVIGATION
+  ══════════════════════════════════ -->
+  <nav class="nav" id="nav">
+    <div class="nav-wrap">
+      <a href="#home" class="nav-logo">
+        <span class="nav-logo-v">V</span><span>elmoverse</span>
+      </a>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#work"     class="nav-a">Work</a></li>
+        <li><a href="#about"    class="nav-a">About</a></li>
+        <li><a href="#services" class="nav-a">Services</a></li>
+        <li><a href="#contact"  class="nav-a">Contact</a></li>
+      </ul>
+
+      <div class="nav-end">
+        <a href="mailto:artbyvelmo@gmail.com" class="btn-hire">Hire Me</a>
+        <button class="hbg" id="hbg" aria-label="Toggle menu">
+          <span></span><span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile fullscreen menu -->
+  <div class="mob-menu" id="mobMenu">
+    <a href="#work"     class="mob-a">Work</a>
+    <a href="#about"    class="mob-a">About</a>
+    <a href="#services" class="mob-a">Services</a>
+    <a href="#contact"  class="mob-a">Contact</a>
+  </div>
+
+  <main>
+
+    <!-- ══════════════════════════════════
+         HERO
+         Left: massive typographic statement
+         Right: 3 floating art card previews
+    ══════════════════════════════════ -->
+    <section class="hero" id="home">
+      <div class="hero-wrap">
+
+        <!-- Left column: text -->
+        <div class="hero-text">
+          <div class="hero-eyebrow">
+            <span class="eyebrow-dot"></span>
+            <span>Web3 Creative Studio</span>
+          </div>
+
+          <!-- Display heading — VELMO stacked over offset VERSE -->
+          <h1 class="hero-h1">
+            <span class="h1-line" data-idx="1">VELMO</span>
+            <span class="h1-line h1-line--gold" data-idx="2">VERSE</span>
+          </h1>
+
+          <div class="hero-foot">
+            <p class="hero-sub">
+              Art &amp; Development for<br>
+              NFTs, Memecoins &amp; Blockchain
+            </p>
+            <a href="#work" class="hero-cta">
+              <span>Explore Work</span>
+              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                <path d="M3 9h12M9 3l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          </div>
         </div>
-        <div class="scroll-indicator">
-            <div class="scroll-arrow"></div>
+
+        <!-- Right column: floating cards + stats -->
+        <div class="hero-visual">
+          <div class="hero-cards">
+            <!-- Floating art previews. onerror hides card gracefully -->
+            <div class="hcard hcard-1">
+              <img src="img/Luna Memecoin/WhatsApp Image 2025-08-21 à 05.39.01_186f7215.jpg"
+                   alt="Luna Memecoin art"
+                   onerror="this.parentElement.style.background='var(--bg3)'">
+            </div>
+            <div class="hcard hcard-2">
+              <img src="img/Hypnotic Chameleons/WhatsApp Image 2025-08-21 à 05.40.57_00f14e32.jpg"
+                   alt="Hypnotic Chameleons NFT"
+                   onerror="this.parentElement.style.background='var(--bg3)'">
+            </div>
+            <div class="hcard hcard-3">
+              <img src="img/SugarCane Memecoin/WhatsApp Image 2025-08-21 à 07.06.37_bfb94736.jpg"
+                   alt="SugarCane Memecoin art"
+                   onerror="this.parentElement.style.background='var(--bg3)'">
+            </div>
+          </div>
+
+          <div class="hero-stats">
+            <div class="hstat">
+              <span class="hstat-n" data-to="100">0</span><span class="hstat-s">+</span>
+              <span class="hstat-l">Projects</span>
+            </div>
+            <div class="hstat">
+              <span class="hstat-n" data-to="50">0</span><span class="hstat-s">+</span>
+              <span class="hstat-l">Clients</span>
+            </div>
+            <div class="hstat">
+              <span class="hstat-n" data-to="3">0</span><span class="hstat-s">+</span>
+              <span class="hstat-l">Years</span>
+            </div>
+          </div>
         </div>
+
+      </div>
+
+      <!-- Vertical scroll hint -->
+      <div class="scroll-hint" aria-hidden="true"></div>
     </section>
 
-    <!-- About Section -->
-    <section id="about" class="about">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">About Velmoverse</h2>
-                <p class="section-subtitle">Art & Development studio for Web3, NFTs, memecoins, and blockchain innovation</p>
-            </div>
-            <div class="about-content">
-                <div class="about-text">
-                    <p>We are Velmoverse, a creative studio specializing in both art and development for Web3, NFTs, memecoins, and blockchain projects. Our team delivers custom NFT collections, branding, project logos, full-stack development, and complete visual identities for crypto startups and established blockchain companies.</p>
-                    <div class="stats">
-                        <div class="stat-item">
-                            <h3>100+</h3>
-                            <p>Projects Completed</p>
-                        </div>
-                        <div class="stat-item">
-                            <h3>50+</h3>
-                            <p>Happy Clients</p>
-                        </div>
-                        <div class="stat-item">
-                            <h3>3+</h3>
-                            <p>Years Experience</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="about-image">
-                    <div class="image-placeholder">
-                        <img src="img/logo-banner/logo.jpg" alt="Velmoverse Logo" class="about-logo">
-                    </div>
-                </div>
-            </div>
+    <!-- ══════════════════════════════════
+         MARQUEE STRIP
+         Running service ticker between hero and work
+    ══════════════════════════════════ -->
+    <div class="marquee" aria-hidden="true">
+      <div class="marquee-inner">
+        <div class="marquee-row">
+          <span>NFT Collections</span><span class="mx">◆</span>
+          <span>Memecoin Branding</span><span class="mx">◆</span>
+          <span>Web3 Development</span><span class="mx">◆</span>
+          <span>Blockchain Art</span><span class="mx">◆</span>
+          <span>UI/UX Design</span><span class="mx">◆</span>
+          <span>Brand Identity</span><span class="mx">◆</span>
+          <span>Smart Contracts</span><span class="mx">◆</span>
+          <span>Social Assets</span><span class="mx">◆</span>
+          <!-- duplicate for seamless loop -->
+          <span>NFT Collections</span><span class="mx">◆</span>
+          <span>Memecoin Branding</span><span class="mx">◆</span>
+          <span>Web3 Development</span><span class="mx">◆</span>
+          <span>Blockchain Art</span><span class="mx">◆</span>
+          <span>UI/UX Design</span><span class="mx">◆</span>
+          <span>Brand Identity</span><span class="mx">◆</span>
+          <span>Smart Contracts</span><span class="mx">◆</span>
+          <span>Social Assets</span><span class="mx">◆</span>
         </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════
+         WORK / PORTFOLIO
+         Filter tabs → Art & NFTs  |  Websites
+         Art: editorial asymmetric grid
+         Web: browser-frame cards
+    ══════════════════════════════════ -->
+    <section class="work" id="work">
+      <div class="section-wrap">
+
+        <div class="work-head">
+          <div class="section-label">Selected Work</div>
+          <div class="work-tabs">
+            <button class="tab tab--on" data-tab="art">Art &amp; NFTs</button>
+            <button class="tab"          data-tab="web">Websites</button>
+          </div>
+        </div>
+
+        <!-- ── Art grid ── -->
+        <div class="art-grid" id="artGrid">
+          <!-- Layout: alternating wide/narrow pairs creates editorial rhythm
+               [card1 narrow] [card2 wide]
+               [card3 wide]   [card4 narrow]
+               [card5 narrow] [card6 wide]        -->
+
+          <div class="wcard wcard-art" data-proj="luna-memecoin">
+            <div class="wcard-img">
+              <img src="img/Luna Memecoin/WhatsApp Image 2025-08-21 à 05.39.01_186f7215.jpg"
+                   alt="Luna Memecoin" loading="lazy"
+                   onerror="this.style.display='none'">
+              <div class="wcard-hover"><span>View Gallery</span></div>
+            </div>
+            <div class="wcard-info">
+              <span class="wcard-num">01</span>
+              <div>
+                <h3 class="wcard-title">Luna Memecoin</h3>
+                <span class="wcard-tag">Memecoin Art · 9 pieces</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="wcard wcard-art" data-proj="hypnotic-chameleons">
+            <div class="wcard-img">
+              <img src="img/Hypnotic Chameleons/WhatsApp Image 2025-08-21 à 05.40.57_00f14e32.jpg"
+                   alt="Hypnotic Chameleons" loading="lazy"
+                   onerror="this.style.display='none'">
+              <div class="wcard-hover"><span>View Gallery</span></div>
+            </div>
+            <div class="wcard-info">
+              <span class="wcard-num">02</span>
+              <div>
+                <h3 class="wcard-title">Hypnotic Chameleons</h3>
+                <span class="wcard-tag">NFT Collection · 7 pieces</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="wcard wcard-art" data-proj="trumpio-ladio">
+            <div class="wcard-img">
+              <img src="img/Trumpio Ladio/WhatsApp Image 2025-08-21 à 06.36.55_7f23e124.jpg"
+                   alt="Trumpio Ladio" loading="lazy"
+                   onerror="this.style.display='none'">
+              <div class="wcard-hover"><span>View Gallery</span></div>
+            </div>
+            <div class="wcard-info">
+              <span class="wcard-num">03</span>
+              <div>
+                <h3 class="wcard-title">Trumpio Ladio</h3>
+                <span class="wcard-tag">Memecoin Art · 11 pieces</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="wcard wcard-art" data-proj="sugarcane-memecoin">
+            <div class="wcard-img">
+              <img src="img/SugarCane Memecoin/WhatsApp Image 2025-08-21 à 07.06.37_bfb94736.jpg"
+                   alt="SugarCane Memecoin" loading="lazy"
+                   onerror="this.style.display='none'">
+              <div class="wcard-hover"><span>View Gallery</span></div>
+            </div>
+            <div class="wcard-info">
+              <span class="wcard-num">04</span>
+              <div>
+                <h3 class="wcard-title">SugarCane Memecoin</h3>
+                <span class="wcard-tag">Brand Identity · 12 pieces</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="wcard wcard-art" data-proj="tilly-memecoin">
+            <div class="wcard-img">
+              <img src="img/Tilly Memecoin/WhatsApp Image 2025-08-21 à 07.07.14_306a7626.jpg"
+                   alt="Tilly Memecoin" loading="lazy"
+                   onerror="this.style.display='none'">
+              <div class="wcard-hover"><span>View Gallery</span></div>
+            </div>
+            <div class="wcard-info">
+              <span class="wcard-num">05</span>
+              <div>
+                <h3 class="wcard-title">Tilly Memecoin</h3>
+                <span class="wcard-tag">Memecoin Branding · 14 pieces</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="wcard wcard-art" data-proj="random-arts">
+            <div class="wcard-img">
+              <img src="img/Random Nfts + Memecoins Arts/WhatsApp Image 2025-08-21 à 07.21.04_00538c71.jpg"
+                   alt="Mixed NFT Arts" loading="lazy"
+                   onerror="this.style.display='none'">
+              <div class="wcard-hover"><span>View Gallery</span></div>
+            </div>
+            <div class="wcard-info">
+              <span class="wcard-num">06</span>
+              <div>
+                <h3 class="wcard-title">Mixed NFT Arts</h3>
+                <span class="wcard-tag">NFTs &amp; Memecoins · 30 pieces</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Website grid (hidden by default) ── -->
+        <div class="web-grid hidden" id="webGrid">
+
+          <a class="wcard wcard-web" href="https://www.mlmcoin.io/" target="_blank" rel="noopener">
+            <div class="browser-frame">
+              <div class="browser-bar">
+                <span class="bdot"></span><span class="bdot"></span><span class="bdot"></span>
+                <span class="burl">mlmcoin.io</span>
+              </div>
+              <div class="browser-body">
+                <div class="browser-placeholder">MLM Coin</div>
+              </div>
+            </div>
+            <div class="wcard-info">
+              <span class="wcard-num">01</span>
+              <div>
+                <h3 class="wcard-title">MLM Coin</h3>
+                <span class="wcard-tag">Web3 Platform ↗</span>
+              </div>
+            </div>
+          </a>
+
+          <a class="wcard wcard-web" href="https://infiniteuptek.com/" target="_blank" rel="noopener">
+            <div class="browser-frame">
+              <div class="browser-bar">
+                <span class="bdot"></span><span class="bdot"></span><span class="bdot"></span>
+                <span class="burl">infiniteuptek.com</span>
+              </div>
+              <div class="browser-body">
+                <div class="browser-placeholder">Infiniteuptek</div>
+              </div>
+            </div>
+            <div class="wcard-info">
+              <span class="wcard-num">02</span>
+              <div>
+                <h3 class="wcard-title">Infiniteuptek</h3>
+                <span class="wcard-tag">Tech Platform ↗</span>
+              </div>
+            </div>
+          </a>
+
+          <a class="wcard wcard-web" href="https://meowbet.xyz/" target="_blank" rel="noopener">
+            <div class="browser-frame">
+              <div class="browser-bar">
+                <span class="bdot"></span><span class="bdot"></span><span class="bdot"></span>
+                <span class="burl">meowbet.xyz</span>
+              </div>
+              <div class="browser-body">
+                <div class="browser-placeholder">Meowbet</div>
+              </div>
+            </div>
+            <div class="wcard-info">
+              <span class="wcard-num">03</span>
+              <div>
+                <h3 class="wcard-title">Meowbet</h3>
+                <span class="wcard-tag">Web3 Gaming ↗</span>
+              </div>
+            </div>
+          </a>
+
+          <a class="wcard wcard-web" href="https://meowbet.vercel.app/" target="_blank" rel="noopener">
+            <div class="browser-frame">
+              <div class="browser-bar">
+                <span class="bdot"></span><span class="bdot"></span><span class="bdot"></span>
+                <span class="burl">meowbet.vercel.app</span>
+              </div>
+              <div class="browser-body">
+                <div class="browser-placeholder">Meowbet V2</div>
+              </div>
+            </div>
+            <div class="wcard-info">
+              <span class="wcard-num">04</span>
+              <div>
+                <h3 class="wcard-title">Meowbet V2</h3>
+                <span class="wcard-tag">Web3 Gaming ↗</span>
+              </div>
+            </div>
+          </a>
+
+          <a class="wcard wcard-web" href="https://byenancecz.xyz/" target="_blank" rel="noopener">
+            <div class="browser-frame">
+              <div class="browser-bar">
+                <span class="bdot"></span><span class="bdot"></span><span class="bdot"></span>
+                <span class="burl">byenancecz.xyz</span>
+              </div>
+              <div class="browser-body">
+                <div class="browser-placeholder">Byenancecz</div>
+              </div>
+            </div>
+            <div class="wcard-info">
+              <span class="wcard-num">05</span>
+              <div>
+                <h3 class="wcard-title">Byenancecz</h3>
+                <span class="wcard-tag">DeFi Platform ↗</span>
+              </div>
+            </div>
+          </a>
+
+          <a class="wcard wcard-web" href="https://www.moonorrugcoin.xyz/" target="_blank" rel="noopener">
+            <div class="browser-frame">
+              <div class="browser-bar">
+                <span class="bdot"></span><span class="bdot"></span><span class="bdot"></span>
+                <span class="burl">moonorrugcoin.xyz</span>
+              </div>
+              <div class="browser-body">
+                <div class="browser-placeholder">Moon Orrug</div>
+              </div>
+            </div>
+            <div class="wcard-info">
+              <span class="wcard-num">06</span>
+              <div>
+                <h3 class="wcard-title">Moon Orrug Coin</h3>
+                <span class="wcard-tag">Memecoin Site ↗</span>
+              </div>
+            </div>
+          </a>
+
+        </div>
+
+      </div>
     </section>
 
-    <!-- Portfolio Section -->
-    <section id="portfolio" class="portfolio">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Project Portfolio</h2>
-                <p class="section-subtitle">Browse my work organized by client projects</p>
+    <!-- ══════════════════════════════════
+         ABOUT
+         Large numbers left, narrative text right
+         Not a resume — a declaration
+    ══════════════════════════════════ -->
+    <section class="about" id="about">
+      <div class="section-wrap">
+        <div class="about-grid">
+
+          <!-- Stat pillars — large display numbers -->
+          <div class="about-nums">
+            <div class="anum">
+              <div class="anum-row">
+                <span class="anum-n counter" data-to="100">0</span>
+                <span class="anum-suf">+</span>
+              </div>
+              <span class="anum-l">Projects Completed</span>
             </div>
-            
-            <!-- Project Folders -->
-            <div class="portfolio-folders" id="portfolio-folders">
-                <div class="project-folder" data-project="luna-memecoin">
-                    <div class="folder-icon">
-                        <i class="fas fa-folder"></i>
-                        <span class="folder-count">9</span>
-                    </div>
-                    <h3>Luna Memecoin</h3>
-                    <p>NFT Collection Design</p>
-                    <div class="project-tags">
-                        <span class="tag">NFT</span>
-                        <span class="tag">Collection</span>
-                    </div>
-                </div>
-                
-                <div class="project-folder" data-project="hypnotic-chameleons">
-                    <div class="folder-icon">
-                        <i class="fas fa-folder"></i>
-                        <span class="folder-count">7</span>
-                    </div>
-                    <h3>Hypnotic Chameleons</h3>
-                    <p>NFT Collection</p>
-                    <div class="project-tags">
-                        <span class="tag">NFT</span>
-                        <span class="tag">Branding</span>
-                    </div>
-                </div>
-                
-                <div class="project-folder" data-project="trumpio-ladio">
-                    <div class="folder-icon">
-                        <i class="fas fa-folder"></i>
-                        <span class="folder-count">11</span>
-                    </div>
-                    <h3>Trumpio Ladio</h3>
-                    <p>Memecoin Branding</p>
-                    <div class="project-tags">
-                        <span class="tag">Memecoin</span>
-                        <span class="tag">Branding</span>
-                    </div>
-                </div>
-                
-                <div class="project-folder" data-project="sugarcane-memecoin">
-                    <div class="folder-icon">
-                        <i class="fas fa-folder"></i>
-                        <span class="folder-count">12</span>
-                    </div>
-                    <h3>SugarCane Memecoin</h3>
-                    <p>Memecoin Design</p>
-                    <div class="project-tags">
-                        <span class="tag">Memecoin</span>
-                        <span class="tag">Design</span>
-                    </div>
-                </div>
-                
-                <div class="project-folder" data-project="tilly-memecoin">
-                    <div class="folder-icon">
-                        <i class="fas fa-folder"></i>
-                        <span class="folder-count">14</span>
-                    </div>
-                    <h3>Tilly Memecoin</h3>
-                    <p>Memecoin Branding</p>
-                    <div class="project-tags">
-                        <span class="tag">Memecoin</span>
-                        <span class="tag">Branding</span>
-                    </div>
-                </div>
-                
-                <div class="project-folder" data-project="random-arts">
-                    <div class="folder-icon">
-                        <i class="fas fa-folder"></i>
-                        <span class="folder-count">30</span>
-                    </div>
-                    <h3>Random NFTs + Memecoins</h3>
-                    <p>Mixed Artwork Collection</p>
-                    <div class="project-tags">
-                        <span class="tag">Mixed</span>
-                        <span class="tag">Collection</span>
-                    </div>
-                </div>
-
-                <div class="project-folder website-project" data-project="mlmcoin">
-                    <div class="folder-icon">
-                        <i class="fas fa-globe"></i>
-                        <span class="folder-count">Web</span>
-                    </div>
-                    <h3>MLM Coin</h3>
-                    <p>Full Website Development</p>
-                    <div class="project-tags">
-                        <span class="tag">Website</span>
-                        <span class="tag">Web3</span>
-                    </div>
-                    <a href="https://www.mlmcoin.io/" target="_blank" class="visit-btn">
-                        <i class="fas fa-external-link-alt"></i> Visit Site
-                    </a>
-                </div>
-
-                <div class="project-folder website-project" data-project="infiniteupek">
-                    <div class="folder-icon">
-                        <i class="fas fa-globe"></i>
-                        <span class="folder-count">Web</span>
-                    </div>
-                    <h3>Infiniteupek</h3>
-                    <p>Web Design & Development</p>
-                    <div class="project-tags">
-                        <span class="tag">Website</span>
-                        <span class="tag">Design</span>
-                    </div>
-                    <a href="https://infiniteuptek.com/" target="_blank" class="visit-btn">
-                        <i class="fas fa-external-link-alt"></i> Visit Site
-                    </a>
-                </div>
-
-                <div class="project-folder website-project" data-project="meowbet">
-                    <div class="folder-icon">
-                        <i class="fas fa-globe"></i>
-                        <span class="folder-count">Web</span>
-                    </div>
-                    <h3>Meowbet</h3>
-                    <p>Interactive Web Platform</p>
-                    <div class="project-tags">
-                        <span class="tag">Website</span>
-                        <span class="tag">Platform</span>
-                    </div>
-                    <a href="https://meowbet.xyz/" target="_blank" class="visit-btn">
-                        <i class="fas fa-external-link-alt"></i> Visit Site
-                    </a>
-                </div>
-
-                <div class="project-folder website-project" data-project="meowbet-vercel">
-                    <div class="folder-icon">
-                        <i class="fas fa-globe"></i>
-                        <span class="folder-count">Web</span>
-                    </div>
-                    <h3>Meowbet Vercel</h3>
-                    <p>Deployed Web Application</p>
-                    <div class="project-tags">
-                        <span class="tag">Website</span>
-                        <span class="tag">App</span>
-                    </div>
-                    <a href="https://meowbet.vercel.app/" target="_blank" class="visit-btn">
-                        <i class="fas fa-external-link-alt"></i> Visit Site
-                    </a>
-                </div>
-
-                <div class="project-folder website-project" data-project="byenancecz">
-                    <div class="folder-icon">
-                        <i class="fas fa-globe"></i>
-                        <span class="folder-count">Web</span>
-                    </div>
-                    <h3>Byenancecz</h3>
-                    <p>Web Design & Development</p>
-                    <div class="project-tags">
-                        <span class="tag">Website</span>
-                        <span class="tag">Design</span>
-                    </div>
-                    <a href="https://byenancecz.xyz/" target="_blank" class="visit-btn">
-                        <i class="fas fa-external-link-alt"></i> Visit Site
-                    </a>
-                </div>
-
-                <div class="project-folder website-project" data-project="moonorrugcoin">
-                    <div class="folder-icon">
-                        <i class="fas fa-globe"></i>
-                        <span class="folder-count">Web</span>
-                    </div>
-                    <h3>Moon Orrug Coin</h3>
-                    <p>Memecoin Website</p>
-                    <div class="project-tags">
-                        <span class="tag">Website</span>
-                        <span class="tag">Memecoin</span>
-                    </div>
-                    <a href="https://www.moonorrugcoin.xyz/" target="_blank" class="visit-btn">
-                        <i class="fas fa-external-link-alt"></i> Visit Site
-                    </a>
-                </div>
+            <div class="anum">
+              <div class="anum-row">
+                <span class="anum-n counter" data-to="50">0</span>
+                <span class="anum-suf">+</span>
+              </div>
+              <span class="anum-l">Happy Clients</span>
             </div>
-            
-            <!-- Project Gallery (Hidden by default) -->
-            <div class="project-gallery" id="project-gallery" style="display: none;">
-                <div class="gallery-header">
-                    <button class="back-btn" id="back-btn">
-                        <i class="fas fa-arrow-left"></i> Back to Projects
-                    </button>
-                    <h3 id="project-title">Project Title</h3>
-                </div>
-                
-                <div class="gallery-grid" id="gallery-grid">
-                    <!-- Gallery items will be loaded here dynamically -->
-                </div>
+            <div class="anum">
+              <div class="anum-row">
+                <span class="anum-n counter" data-to="3">0</span>
+                <span class="anum-suf">+</span>
+              </div>
+              <span class="anum-l">Years Experience</span>
             </div>
+          </div>
+
+          <!-- Story text -->
+          <div class="about-copy">
+            <div class="section-label">About</div>
+            <h2 class="about-h2">Where digital art<br>meets the chain</h2>
+            <p class="about-p">
+              Velmoverse is a boutique creative studio living at the intersection of art
+              and blockchain technology. We build visual identities, NFT collections, and
+              web experiences that don't just look good — they move culture.
+            </p>
+            <p class="about-p">
+              From viral memecoins to high-end NFT drops, every project starts with a
+              story and ends with something the internet doesn't forget.
+            </p>
+            <div class="about-logo-wrap">
+              <img src="img/logo-banner/logo.jpg" alt="Velmoverse Logo">
+            </div>
+          </div>
+
         </div>
+      </div>
     </section>
 
-    <!-- Services Section -->
-    <section id="services" class="services">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Our Services</h2>
-                <p class="section-subtitle">Art & Development for Web3, NFTs, memecoins, and blockchain projects</p>
-            </div>
-            <div class="services-grid">
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-palette"></i>
-                    </div>
-                    <h3>NFT & Art Collections</h3>
-                    <p>Custom NFT collections, illustrations, and digital art for Web3 and blockchain projects.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-coins"></i>
-                    </div>
-                    <h3>Memecoin Branding</h3>
-                    <p>Logo design, mascots, and full branding for memecoins and crypto projects.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-code"></i>
-                    </div>
-                    <h3>Web3 & Blockchain Development</h3>
-                    <p>Smart contracts, dApps, NFT minting sites, and full-stack blockchain development.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-paint-brush"></i>
-                    </div>
-                    <h3>Graphic & UI/UX Design</h3>
-                    <p>Modern interfaces, custom graphics, and user experiences for DeFi, NFT, and crypto apps.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-rocket"></i>
-                    </div>
-                    <h3>Brand Identity</h3>
-                    <p>Complete branding packages for DAOs, DeFi protocols, and blockchain startups.</p>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">
-                        <i class="fas fa-images"></i>
-                    </div>
-                    <h3>Social Media & Marketing Assets</h3>
-                    <p>Twitter headers, Discord banners, promotional graphics, and marketing materials.</p>
-                </div>
-            </div>
+    <!-- ══════════════════════════════════
+         SERVICES
+         Editorial horizontal list rows
+         Hover slides the row, arrow turns blue
+    ══════════════════════════════════ -->
+    <section class="services" id="services">
+      <div class="section-wrap">
+        <div class="section-label">Services</div>
+        <h2 class="srv-h2">What we craft</h2>
+
+        <div class="srv-list">
+          <div class="srv-row">
+            <div class="srv-left"><span class="srv-n">01</span><h3 class="srv-name">NFT &amp; Art Collections</h3></div>
+            <p class="srv-desc">Full-cycle NFT production — concept, illustration, trait layering, and deployment.</p>
+            <span class="srv-arr">→</span>
+          </div>
+          <div class="srv-row">
+            <div class="srv-left"><span class="srv-n">02</span><h3 class="srv-name">Memecoin Branding</h3></div>
+            <p class="srv-desc">Complete visual identity — logos, mascots, social assets, and launch materials.</p>
+            <span class="srv-arr">→</span>
+          </div>
+          <div class="srv-row">
+            <div class="srv-left"><span class="srv-n">03</span><h3 class="srv-name">Web3 Development</h3></div>
+            <p class="srv-desc">High-performance blockchain websites and dApps built to convert and impress.</p>
+            <span class="srv-arr">→</span>
+          </div>
+          <div class="srv-row">
+            <div class="srv-left"><span class="srv-n">04</span><h3 class="srv-name">Graphic &amp; UI/UX Design</h3></div>
+            <p class="srv-desc">Intuitive, beautiful interfaces for crypto platforms and Web3 products.</p>
+            <span class="srv-arr">→</span>
+          </div>
+          <div class="srv-row">
+            <div class="srv-left"><span class="srv-n">05</span><h3 class="srv-name">Brand Identity</h3></div>
+            <p class="srv-desc">Strategic brand systems that give your project a recognizable, memorable presence.</p>
+            <span class="srv-arr">→</span>
+          </div>
+          <div class="srv-row">
+            <div class="srv-left"><span class="srv-n">06</span><h3 class="srv-name">Social Media Assets</h3></div>
+            <p class="srv-desc">Scroll-stopping visuals for Twitter, Discord, and Telegram communities.</p>
+            <span class="srv-arr">→</span>
+          </div>
         </div>
+      </div>
     </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="contact">
-        <div class="container">
-            <div class="section-header">
-                <h2 class="section-title">Get In Touch</h2>
-                <p class="section-subtitle">Let's collaborate on your next Web3 project. Available for freelance work and custom commissions.</p>
-            </div>
-            <div class="contact-content">
-                <div class="contact-info">
-                    <div class="contact-item">
-                        <i class="fas fa-envelope"></i>
-                        <div>
-                            <h4>Email</h4>
-                            <p><a href="mailto:artbyvelmo@gmail.com">artbyvelmo@gmail.com</a></p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <i class="fab fa-telegram"></i>
-                        <div>
-                            <h4>Telegram</h4>
-                            <p><a href="https://t.me/velmoverse" target="_blank">@velmoverse</a></p>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <i class="fab fa-twitter"></i>
-                        <div>
-                            <h4>Twitter</h4>
-                            <p><a href="https://x.com/velmoverse" target="_blank">@velmoverse</a></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- ══════════════════════════════════
+         CONTACT
+         Big heading + contact links list
+         Watermark text in background
+    ══════════════════════════════════ -->
+    <section class="contact" id="contact">
+      <div class="section-wrap">
+        <div class="section-label">Let's Talk</div>
+        <h2 class="cta-h2">Ready to build<br>something iconic?</h2>
+
+        <div class="clinks">
+          <a href="mailto:artbyvelmo@gmail.com" class="clink">
+            <span class="clink-label">Email</span>
+            <span class="clink-val">artbyvelmo@gmail.com</span>
+            <span class="clink-arr">↗</span>
+          </a>
+          <a href="https://t.me/velmoverse" target="_blank" rel="noopener" class="clink">
+            <span class="clink-label">Telegram</span>
+            <span class="clink-val">@velmoverse</span>
+            <span class="clink-arr">↗</span>
+          </a>
+          <a href="https://x.com/velmoverse" target="_blank" rel="noopener" class="clink">
+            <span class="clink-label">Twitter / X</span>
+            <span class="clink-val">@velmoverse</span>
+            <span class="clink-arr">↗</span>
+          </a>
         </div>
+      </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-text">
-                    <p>&copy; 2025 Velmoverse</p>
-                </div>
-                <div class="social-links">
-                    <a href="https://x.com/Artbyvelmo" class="social-link"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-discord"></i></a>
-                    
-                </div>
-            </div>
-        </div>
-    </footer>
+  </main>
 
-    <script src="script.js"></script>
+  <!-- ══════════════════════════════════
+       FOOTER
+  ══════════════════════════════════ -->
+  <footer class="footer">
+    <div class="footer-wrap">
+      <div class="footer-left">
+        <span class="footer-name">Velmoverse</span>
+        <span class="footer-copy">© 2025 All rights reserved</span>
+      </div>
+      <div class="footer-right">
+        <a href="https://x.com/Artbyvelmo"   target="_blank" rel="noopener" class="footer-a">Twitter</a>
+        <a href="https://t.me/velmoverse"     target="_blank" rel="noopener" class="footer-a">Telegram</a>
+        <a href="mailto:artbyvelmo@gmail.com"                                class="footer-a">Email</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ══════════════════════════════════
+       GALLERY MODAL
+       Opens when an art card is clicked
+  ══════════════════════════════════ -->
+  <div class="gmodal" id="gmodal" role="dialog" aria-modal="true" aria-label="Project gallery">
+    <div class="gmodal-back" id="gmodalBack"></div>
+    <div class="gmodal-body">
+      <div class="gmodal-top">
+        <div>
+          <h3 class="gmodal-title" id="gmodalTitle"></h3>
+          <span class="gmodal-count" id="gmodalCount"></span>
+        </div>
+        <button class="gmodal-close" id="gmodalClose" aria-label="Close gallery">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M15 5L5 15M5 5l10 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="gmodal-grid" id="gmodalGrid"></div>
+    </div>
+
+    <!-- Lightbox inside modal -->
+    <div class="lightbox" id="lightbox">
+      <button class="lb-close" id="lbClose" aria-label="Close image">✕</button>
+      <button class="lb-prev"  id="lbPrev"  aria-label="Previous image">‹</button>
+      <img class="lb-img" id="lbImg" src="" alt="Full size artwork">
+      <button class="lb-next"  id="lbNext"  aria-label="Next image">›</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
